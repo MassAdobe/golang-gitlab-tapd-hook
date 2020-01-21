@@ -1,0 +1,30 @@
+$ cd /usr/lib/systemd/system
+$ vim kpi.service
+
+[Unit]
+Description=KPI
+Description=Golang Program Of KPI
+Documentation=None
+Requires=network.target remote-fs.target
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStart=/usr/local/kpi/start.sh
+ExecStop=/bin/killall gitlab_tapd
+KillMode=process
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+
+$ systemctl enable kpi.service
+$ systemctl start kpi.service
+
+$ cd /usr/local/kpi
+$ vim start.sh
+
+#!/bin/bash
+nohup /usr/local/kpi/gitlab_tapd &
+echo "kpi start ok"
